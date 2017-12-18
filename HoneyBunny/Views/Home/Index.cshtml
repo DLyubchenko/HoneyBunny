@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model IEnumerable<HoneyBunny.Models.Category>
+
+<div class="col-md-6 col-md-offset-7 searchPanel">
+    <input id="searchInput" type="search" class="form-control" placeholder="Search" />
+    <img class="img-Trolley" src="/Content/image/trolley.bmp" />
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="itemsResult">
+            @if (@Session["productCount"] != null)
+            {
+                <i>@Session["productCount"].ToString()</i>
+            }
+            else
+            {
+                <i>0</i>
+            }
+        </div>
+        <i> Items</i>
+    }
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <h2>Categories</h2>
+        <ul>
+            @RenderCategories(Model.Where(m => m.ParentId == 0).ToList())
+        </ul>
+        @Html.ActionLink("Добавить категорию", "AddCategory", new { parentId = 0 }, new { @class = "editLink" })
+    </div>
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="col-md-10">
+        <h2>Product List</h2>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+@helper RenderCategories(IEnumerable<HoneyBunny.Models.Category> categories)
+{
+    foreach (var category in categories)
+    {
+        <li>
+            <table>
+                <tr>
+                    <td>
+                        @Ajax.ActionLink(category.Name, "CategorySearch", new { categoryId = category.Id }, new AjaxOptions { UpdateTargetId = "searchResult" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Редактировать категорию", "EditCategory", new { Id = category.Id }, new { @class = "editLink" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Добавить категорию", "AddCategory", new { parentId = category.Id }, new { @class = "editLink"})
+                    </td>
+                    <td>
+                        @Html.ActionLink("Добавить товар", "AddCategory", new { parentId = category.Id }, new AjaxOptions { UpdateTargetId = "searchResult" })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Удалить категорию", "AddCategory", new { parentId = category.Id }, new AjaxOptions { UpdateTargetId = "searchResult" })
+                    </td>
+                </tr>
+            </table>
+
+            @if (Model.Any(c=>c.ParentId == category.Id))
+            {
+                <ul>
+                    @RenderCategories(Model.Where(m => m.ParentId == category.Id).ToList())
+                </ul>
+            }
+        </li>
+    }
+}
+
+@Scripts.Render("~/scripts/jquery-1.10.2.min.js")
+@Scripts.Render("~/scripts/jquery.unobtrusive-ajax.min.js")
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $.ajaxSetup({ cache: false });
+
+            $(".editLink").click(function (e) {
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+    </script>
+}
+
+@*<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+            enables a clean separation of concerns and gives you full control over markup
+            for enjoyable, agile development.
+        </p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>
+</div>*@
