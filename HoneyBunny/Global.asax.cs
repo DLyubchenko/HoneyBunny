@@ -1,7 +1,4 @@
 ﻿using HoneyBunny.Models;
-using HoneyBunny.Util;
-using Ninject;
-using Ninject.Modules;
 using System.Data.Entity;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -19,11 +16,6 @@ namespace HoneyBunny
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            // Dependency injection
-            NinjectModule registrations = new NinjectRegistrations();
-            var kernel = new StandardKernel(registrations);
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }
     }
 }

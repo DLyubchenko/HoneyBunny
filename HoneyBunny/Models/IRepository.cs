@@ -6,7 +6,6 @@ namespace HoneyBunny.Models
 {
     public interface IRepository
     {
-        ApplicationDbContext _db { get; set; }
         Task<List<Category>> CategoryListAsync();
         Task<Category> GetCategoryAsync(int id);
         Task InsertCategoryAsync(Category category);

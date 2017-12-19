@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Ninject;
 
 namespace HoneyBunny.Controllers
 {
@@ -13,13 +12,6 @@ namespace HoneyBunny.Controllers
     {
         private IRepository _repository;
 
-        public HomeController()
-        {
-            IKernel ninjectKernel = new StandardKernel();
-            ninjectKernel.Bind<IRepository>().To<Repository>();
-
-            _repository = ninjectKernel.Get<IRepository>();
-        }
         public HomeController(IRepository repository)
         {
             _repository = repository;
@@ -27,8 +19,7 @@ namespace HoneyBunny.Controllers
 
         public async Task<ActionResult> Index()
         {
-            //var categories = await _repository.CategoryListAsync();
-            var categories = _repository._db.Categories;
+            var categories = await _repository.CategoryListAsync();
             return View(categories);
         }
 

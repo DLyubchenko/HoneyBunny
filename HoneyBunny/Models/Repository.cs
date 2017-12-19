@@ -7,7 +7,7 @@ namespace HoneyBunny.Models
 {
     public class Repository : IDisposable, IRepository
     {
-        public ApplicationDbContext _db { get; set; }
+        private ApplicationDbContext _db;
 
         public Repository(ApplicationDbContext context)
         {
