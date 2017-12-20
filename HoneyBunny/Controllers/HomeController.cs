@@ -17,14 +17,14 @@ namespace HoneyBunny.Controllers
             _repository = repository;
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ViewResult> Index()
         {
             var categories = await _repository.CategoryListAsync();
             return View(categories);
         }
 
         [HttpGet]
-        public async Task<ActionResult> AddCategory(int parentId)
+        public async Task<PartialViewResult> AddCategory(int parentId)
         {
             await InitializeCategoryDropDown(parentId);
 
